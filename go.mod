@@ -1,4 +1,4 @@
-module github.com/boundedinfinity/trier
+module github.com/boundedinfinity/go-trier
 
 go 1.18
 

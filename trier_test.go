@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/boundedinfinity/trier"
+	"github.com/boundedinfinity/go-trier"
 	"github.com/stretchr/testify/assert"
 )
 
