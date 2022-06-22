@@ -1,14 +1,18 @@
 package trier
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/boundedinfinity/go-trier/errorer"
+)
 
 type Try[T any] struct {
-	Result T
-	Err    error
+	Result T     `json:"result"`
+	Error  error `json:"error"`
 }
 
 func (t Try[T]) Failure() bool {
-	return t.Err != nil
+	return t.Error != nil
 }
 
 func (t Try[T]) Success() bool {
@@ -23,24 +27,21 @@ func Success[T any](result T) Try[T] {
 
 func Failure[T any](err error) Try[T] {
 	var zero T
-	return FailureR(zero, err)
+	return FailureWithResult(zero, err)
 }
 
-func FailureR[T any](result T, err error) Try[T] {
+func FailureWithResult[T any](result T, err error) Try[T] {
+	err2 := errorer.Err(err)
 	return Try[T]{
 		Result: result,
-		Err:    err,
+		Error:  &err2,
 	}
 }
 
 func Failuref[T any](format string, a ...any) Try[T] {
-	var zero T
-	return FailureRf(zero, format, a...)
+	return Failure[T](fmt.Errorf(format, a...))
 }
 
-func FailureRf[T any](result T, format string, a ...any) Try[T] {
-	return Try[T]{
-		Result: result,
-		Err:    fmt.Errorf(format, a...),
-	}
+func FailurefWithResult[T any](result T, format string, a ...any) Try[T] {
+	return FailureWithResult(result, fmt.Errorf(format, a...))
 }
